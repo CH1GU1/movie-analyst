@@ -1,13 +1,15 @@
 // Get our dependencies
 const express = require('express')
 const app = express()
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const util = require('util')
 
 const pool = mysql.createPool({
+  connectionLimit: 10,
   host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'applicationuser',
-  password: process.env.DB_PASS || 'applicationuser',
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_NAME || 'movie_db'
 })
 pool.query = util.promisify(pool.query)
@@ -49,9 +51,9 @@ app.get('/publications', async function (req, res) {
 app.get('/pending', async function (req, res) {
   try {
     const rows = await pool.query(
-      'select m.title, m.release, m.score, r.name as reviewer, p.name as publication' +
+      'select m.title, m.release_year, m.score, r.name as reviewer, p.name as publication' +
       'from movie_db.movies m, movie_db.reviewers r, movie_db.publications p where' +
-      'r.publication=p.name and m.reviewer=r.name and m.release>=2017'
+      'r.publication=p.name and m.reviewer=r.name and m.release_year>=2017'
     )
     res.json(rows)
   } catch (err) {
@@ -64,6 +66,8 @@ app.get('/', function (req, res) {
   res.status(200).send({'service_status': 'Up'})
 })
 
-console.log('server listening through port: ' + process.env.PORT)
-app.listen(process.env.PORT || 3000)
+const port = process.env.PORT || 8000
+app.listen(port, () => {
+  console.log(`API listening on port: ${port}`)
+})
 module.exports = app

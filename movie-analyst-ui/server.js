@@ -12,7 +12,7 @@ app.set('views', __dirname + '/public/views/');
 // This tells Express out of which directory to serve static assets like CSS and images
 app.use(express.static(__dirname + '/public'));
 
-let backend_url = process.env.BACKEND_URL || "localhost:3000"
+const backend_url = process.env.BACKEND_URL || 'http://localhost:8000'
 
 // The homepage route of our application does not interface with the MovieAnalyst API and is always accessible. We won’t use the getAccessToken middleware here. We’ll simply render the index.ejs view.
 app.get('/', function(req, res){
@@ -23,7 +23,7 @@ app.get('/', function(req, res){
 // Once the request is sent out, our API will validate that the access_token has the right scope to request the /movies resource and if it does, will return the movie data. We’ll take this movie data, and pass it alongside our movies.ejs template for rendering
 app.get('/movies', function(req, res){
   request
-    .get(`http://${backend_url}/movies`)
+    .get(`${backend_url}/movies`)
     .end(function(err, data) {
       if(data.status == 403){
         res.send(403, '403 Forbidden');
@@ -38,7 +38,7 @@ app.get('/movies', function(req, res){
 // The key difference on the authors route, is that for our client, we’re naming the route /authors, but our API endpoint is /reviewers. Our route on the client does not have to match the API endpoint route.
 app.get('/authors', function(req, res){
   request
-    .get(`http://${backend_url}/reviewers`)
+    .get(`${backend_url}/reviewers`)
     .set('Authorization', 'Bearer ' + req.access_token)
     .end(function(err, data) {
       if(data.status == 403){
@@ -52,7 +52,7 @@ app.get('/authors', function(req, res){
 
 app.get('/publications', function(req, res){
   request
-    .get(`http://${backend_url}/publications`)
+    .get(`${backend_url}/publications`)
     .end(function(err, data) {
       if(data.status == 403){
         res.send(403, '403 Forbidden');
@@ -66,7 +66,7 @@ app.get('/publications', function(req, res){
 // We’ve added the pending route, but calling this route from the MovieAnalyst Website will always result in a 403 Forbidden error as this client does not have the admin scope required to get the data.
 app.get('/pending', function(req, res){
   request
-    .get(`http://${backend_url}/pending`)
+    .get(`${backend_url}/pending`)
     .end(function(err, data) {
       if(data.status == 403){
         res.send(403, '403 Forbidden');
@@ -74,4 +74,7 @@ app.get('/pending', function(req, res){
     })
 })
 
-app.listen(process.env.PORT || 3030);
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+  console.log(`UI listening on port: ${port}`)
+})

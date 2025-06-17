@@ -1,4 +1,4 @@
-# DevOps Ramp-up Projects
+# Movie Analyst
 
 Welcome to the Endava Bogotá DevOps Ramp Up site. DevOps has a wide variety of practices, tools and methodologies which enable us to be an important part of and agile delivery culture. Most of the DevOps practitioners are part of the Continuous Delivery Practice. More info on the practice can be found here:
 
@@ -8,7 +8,19 @@ https://weblog.endava.com/continuous-delivery-initiative/introduction-to-cd/
 
 This ramp-up is presented in challenges. Each challenge is chose to show new joiners the basics in some of the DevOps practices, and it is designed to help us use the same language after its completion. We are tool agnostics, so you can use any tool you like, but we do have a client base that need us to be proficient in some basic AWS concepts. They are ordered according our current view of projects necessities.
 
+> See 2025.md for the changes made to fix this application.
 
+Run this project locally using Docker Compose:
+
+```bash
+export COMPOSE_BAKE=true # Optional
+
+docker compose up
+
+docker compose down # To stop the containers
+```
+
+That's it, go to your browser and open [`http://localhost:3000`](http://localhost:3000) to see the UI.
 
 ## Challenges
 

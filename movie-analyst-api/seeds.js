@@ -1,4 +1,4 @@
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const util = require('util')
 
 async function main () {
@@ -6,8 +6,9 @@ async function main () {
     const pool = mysql.createPool({
       connectionLimit: 10,
       host: process.env.DB_HOST || 'localhost',
-      user: process.env.DB_USER || 'applicationuser',
-      password: process.env.DB_PASS || 'applicationuser',
+      port: process.env.DB_PORT || 3306,
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASSWORD || 'password',
       database: process.env.DB_NAME || 'movie_db'
     })
     pool.query = util.promisify(pool.query)
